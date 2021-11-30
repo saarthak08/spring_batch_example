@@ -29,6 +29,7 @@ class PersonBatchConfiguration(
 
   val outputResource = FileSystemResource("output/output.csv")
 
+  // Reader reads data from database.
   @Bean fun reader(dataSource: DataSource): JdbcCursorItemReader<Person> {
     var itemReader = JdbcCursorItemReader<Person>()
     itemReader = itemReader.apply {
@@ -40,6 +41,7 @@ class PersonBatchConfiguration(
     return itemReader
   }
 
+  // Processor processes the data
   @Bean fun processor(): PersonItemProcessor {
     return PersonItemProcessor()
   }
@@ -63,6 +65,7 @@ class PersonBatchConfiguration(
       .build()
   }
 
+  // Writer writes the data to CSV file.
   @Bean fun writer(): FlatFileItemWriter<Person> {
 
     val writer: FlatFileItemWriter<Person> = FlatFileItemWriter<Person>()
