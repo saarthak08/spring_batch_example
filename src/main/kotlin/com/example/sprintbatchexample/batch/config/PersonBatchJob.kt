@@ -22,7 +22,7 @@ import javax.sql.DataSource
 
 @Configuration
 @EnableBatchProcessing
-class PersonBatchComponent(
+class PersonBatchJob(
   val jobBuilderFactory: JobBuilderFactory,
   val stepBuilderFactory: StepBuilderFactory,
 ) {
@@ -44,25 +44,6 @@ class PersonBatchComponent(
   // Processor processes the data
   @Bean fun processor(): PersonItemProcessor {
     return PersonItemProcessor()
-  }
-
-  @Bean(name = ["personJob"])
-  fun importUserJob(listener: PersonJobCompletionNotificationListener, step1: Step): Job {
-    return jobBuilderFactory["importUserJob"]
-      .incrementer(RunIdIncrementer())
-      .listener(listener)
-      .flow(step1)
-      .end()
-      .build()
-  }
-
-  @Bean fun step1(reader: JdbcCursorItemReader<Person>): Step {
-    return stepBuilderFactory["step1"]
-      .chunk<Person, Person>(10)
-      .reader(reader)
-      .processor(processor())
-      .writer(writer())
-      .build()
   }
 
   // Writer writes the data to CSV file.
@@ -91,5 +72,24 @@ class PersonBatchComponent(
       }
     })
     return writer
+  }
+
+  @Bean fun step1(reader: JdbcCursorItemReader<Person>): Step {
+    return stepBuilderFactory["step1"]
+      .chunk<Person, Person>(10)
+      .reader(reader)
+      .processor(processor())
+      .writer(writer())
+      .build()
+  }
+
+  @Bean(name = ["personJob"])
+  fun importPersonJob(listener: PersonJobCompletionNotificationListener, step1: Step): Job {
+    return jobBuilderFactory["importPersonJob"]
+      .incrementer(RunIdIncrementer())
+      .listener(listener)
+      .flow(step1)
+      .end()
+      .build()
   }
 }

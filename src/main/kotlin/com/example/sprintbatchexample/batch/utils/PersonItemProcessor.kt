@@ -8,11 +8,13 @@ import java.util.Locale
 
 class PersonItemProcessor : ItemProcessor<Person, Person> {
   private val logger: Logger = LoggerFactory.getLogger(PersonItemProcessor::class.java)
-  override fun process(p0: Person): Person? {
+  override fun process(p0: Person): Person {
     val transformedPerson = p0.apply {
       firstName = p0.firstName.uppercase(Locale.getDefault())
       lastName = p0.lastName.uppercase(Locale.getDefault())
     }
+    // Sleeping the thread to check whether job is running asynchronously or not.
+    Thread.sleep(2000)
     logger.info("Converting ($p0) into ($transformedPerson)")
     return transformedPerson
   }
