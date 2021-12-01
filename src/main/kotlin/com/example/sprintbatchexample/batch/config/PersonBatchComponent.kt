@@ -22,9 +22,9 @@ import javax.sql.DataSource
 
 @Configuration
 @EnableBatchProcessing
-class PersonBatchConfiguration(
+class PersonBatchComponent(
   val jobBuilderFactory: JobBuilderFactory,
-  val stepBuilderFactory: StepBuilderFactory
+  val stepBuilderFactory: StepBuilderFactory,
 ) {
 
   val outputResource = FileSystemResource("output/output.csv")

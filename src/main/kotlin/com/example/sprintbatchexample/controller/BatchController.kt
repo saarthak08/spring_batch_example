@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.RestController
 
 @RequestMapping("/api/v1/batch")
 @RestController
-class BatchController(val jobLauncher: JobLauncher, @Qualifier("personJob") val job: Job) {
+class BatchController(
+  @Qualifier("myJobLauncher") val jobLauncher: JobLauncher,
+  @Qualifier("personJob") val job: Job
+) {
 
   @GetMapping("/exec")
   fun startJob(): ResponseEntity<String> {
